@@ -1,0 +1,11 @@
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+logs/
+.vscode/
+*.log
+dashboard/static/index_with_css.html
+dashboard/static/New Text Document.txt
+dashboard/static/style.css
