@@ -5,6 +5,18 @@ from config.settings import API_KEY, API_SECRET, DEMO_MODE, TESTNET, SYMBOL, TIM
 from utils.logger import logger
 
 class MarketData:
+    def get_ticker_24h(self):
+        try:
+            t = self.session.get_tickers(category="linear", symbol=self.symbol)
+            d = t["result"]["list"][0]
+            return {
+                "price": float(d["lastPrice"]),
+                "change_pct": round(float(d.get("price24hPcnt", 0)) * 100, 2),
+            }
+        except Exception as e:
+            logger.error(f"get_ticker_24h: {e}")
+            return {"price": 0.0, "change_pct": 0.0}
+
     def __init__(self, symbol: str = SYMBOL):
         self.session = HTTP(
             testnet=TESTNET,
