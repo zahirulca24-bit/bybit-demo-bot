@@ -10,12 +10,9 @@
   --r:#f85149;--rbg:#2d1117;--rbr:#4a1c1c;--b:#58a6ff;--bbg:#0d1f36;--y:#d29922;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-/* Header */
-header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;height:50px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;}
+header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;height:50px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;flex-shrink:0;}
-.li{width:26px;height:26px;background:linear-gradient(135deg,#f7a11a,#e8440f);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;font-size:13px;}
+.li{width:26px;height:26px;background:linear-gradient(135deg,#f7a11a,#e8440f);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;}
 .badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;}
 .bdemo{background:var(--bbg);color:var(--b);border:1px solid #1a3a5c;}
 .blive{background:var(--gbg);color:var(--g);border:1px solid var(--gbr);}
@@ -26,14 +23,11 @@ header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;h
 .hsi{text-align:right;}
 .hsl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;}
 .hsv{font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;}
-/* Tabs */
 .tbar{background:var(--bg2);border-bottom:1px solid var(--bd2);display:flex;flex-shrink:0;overflow-x:auto;}
 .tbar::-webkit-scrollbar{height:0;}
-.tab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.tab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;}
 .tab:hover{color:var(--t2);}
 .tab.active{color:var(--b);border-bottom-color:var(--b);}
-/* Layout */
 .wrap{display:flex;flex:1;overflow:hidden;}
 .lp{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 .rp{width:240px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--bd2);display:flex;flex-direction:column;overflow:hidden;}
@@ -48,43 +42,34 @@ header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;h
 .rt tr:last-child td{border-bottom:none;}
 .rt tr:hover td{background:var(--bg4);cursor:pointer;}
 .rt tr.sel td{background:var(--bbg);}
-/* Tab Content */
 .tc{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .tc.active{display:flex;}
-/* Chart */
-.chdr{padding:9px 14px;border-bottom:1px solid var(--bd);background:var(--bg2);
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.chdr{padding:9px 14px;border-bottom:1px solid var(--bd);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .ctit{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
 .dot{width:5px;height:5px;background:var(--b);border-radius:50%;}
 .csym{color:var(--b);font-weight:700;font-family:'JetBrains Mono',monospace;}
 .cmeta{display:flex;align-items:center;gap:12px;}
-.countdown-box{background:var(--bg4);border:1px solid var(--bd2);border-radius:6px;
-  padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
+.countdown-box{background:var(--bg4);border:1px solid var(--bd2);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
 .cd-label{font-size:9px;color:var(--t3);margin-right:4px;}
 .chint{font-size:10px;color:var(--t3);}
-#tv-c{flex:1;overflow:hidden;}
+#tv-c{flex:1;min-height:400px;overflow:hidden;}
 .tstrip{height:165px;flex-shrink:0;border-top:1px solid var(--bd2);background:var(--bg2);display:flex;flex-direction:column;}
 .shdr{padding:7px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .st{font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;}
 .cnt{font-size:10px;background:var(--bg4);color:var(--t2);padding:2px 7px;border-radius:8px;border:1px solid var(--bd2);}
 .sbody{flex:1;overflow-y:auto;}
-/* Scanner */
 .scan-wrap{flex:1;overflow-y:auto;padding:12px;}
 .scan-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .ssc{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px;text-align:center;}
 .ssv{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;}
 .ssl{font-size:10px;color:var(--t3);margin-top:3px;}
-.scan-btn{padding:7px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;
-  font-size:12px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.scan-btn{padding:7px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .2s;}
 .scan-btn:hover{opacity:.8;}
 .scan-btn:disabled{opacity:.4;cursor:not-allowed;}
 .tbl-wrap{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;overflow:hidden;}
-.tbl-head{padding:10px 14px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600;
-  display:flex;align-items:center;justify-content:space-between;}
-/* Signal */
+.tbl-head{padding:10px 14px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
 .sig-wrap{flex:1;overflow-y:auto;padding:12px;}
 .sig-top{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-/* Journal */
 .jwrap{flex:1;overflow-y:auto;padding:12px;}
 .jg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .jc{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px;}
@@ -98,7 +83,6 @@ header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;h
 .wri{text-align:center;}
 .wril{font-size:9px;color:var(--t3);}
 .wriv{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;}
-/* Settings */
 .swrap{flex:1;overflow-y:auto;padding:12px;}
 .cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .cfg-c{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px;}
@@ -106,8 +90,7 @@ header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;h
 .cfg-r{display:flex;justify-content:space-between;margin-bottom:5px;}
 .cfg-k{font-size:11px;color:var(--t2);}
 .cfg-v{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;}
-.test-btn{padding:8px 20px;background:var(--bg4);border:1px solid var(--bd2);border-radius:6px;
-  color:var(--t);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:12px;}
+.test-btn{padding:8px 20px;background:var(--bg4);border:1px solid var(--bd2);border-radius:6px;color:var(--t);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:12px;}
 .test-btn:hover{border-color:var(--b);color:var(--b);}
 .conn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .conn-c{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:14px;text-align:center;}
@@ -118,10 +101,8 @@ header{background:var(--bg2);border-bottom:1px solid var(--bd2);padding:0 14px;h
 .cs-err{background:var(--rbg);color:var(--r);border:1px solid var(--rbr);}
 .cs-idle{background:var(--bg4);color:var(--t3);border:1px solid var(--bd);}
 .conn-msg{font-size:10px;color:var(--t3);margin-top:4px;word-break:break-all;}
-/* Common */
 table{width:100%;border-collapse:collapse;}
-th{text-align:left;padding:7px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.6px;
-  color:var(--t3);font-weight:500;background:var(--bg2);border-bottom:1px solid var(--bd);}
+th{text-align:left;padding:7px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;background:var(--bg2);border-bottom:1px solid var(--bd);}
 td{padding:7px 10px;font-size:11px;border-bottom:1px solid var(--bd);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:var(--bg4);}
@@ -134,8 +115,7 @@ tr:hover td{background:var(--bg4);}
 .dloss{color:var(--r);font-weight:600;}
 .dopn{color:var(--y);font-weight:600;}
 .sc{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:10px;}
-.sch{padding:9px 14px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600;
-  display:flex;align-items:center;gap:5px;}
+.sch{padding:9px 14px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;}
 .emp{text-align:center;color:var(--t3);font-size:12px;padding:20px !important;}
 .sigb{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;}
 .sBUY{background:var(--gbg);color:var(--g);border:1px solid var(--gbr);}
@@ -147,8 +127,6 @@ tr:hover td{background:var(--bg4);}
 .scored-yes{color:var(--g);font-weight:600;}
 .scored-no{color:var(--t3);}
 .footer{padding:4px 14px;font-size:10px;color:var(--t3);background:var(--bg2);border-top:1px solid var(--bd);flex-shrink:0;}
-@media(max-width:900px){.rp{width:190px;}}
-@media(max-width:680px){.rp{display:none;}.jg{grid-template-columns:1fr 1fr;}.scan-stats{grid-template-columns:1fr 1fr;}}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
 </style>
@@ -171,11 +149,11 @@ tr:hover td{background:var(--bg4);}
   <div class="tab" id="t-scanner" onclick="st('scanner',this)">🔍 Scanner</div>
   <div class="tab" id="t-signals" onclick="st('signals',this)">🔔 Signals</div>
   <div class="tab" id="t-journal" onclick="st('journal',this)">📒 Journal</div>
+  <div class="tab" id="t-math" onclick="st('math',this)">🧮 Math Predict</div>
   <div class="tab" id="t-settings" onclick="st('settings',this)">⚙️ Settings</div>
 </div>
 <div class="wrap">
 <div class="lp">
-  <!-- Chart Tab -->
   <div class="tc active" id="tc-chart">
     <div class="chdr">
       <div class="ctit"><span class="dot"></span>Chart — <span class="csym" id="csym">BTCUSDT</span></div>
@@ -184,7 +162,20 @@ tr:hover td{background:var(--bg4);}
         <span class="chint">15m · RSI + MACD · Click card → chart</span>
       </div>
     </div>
-    <div id="tv-c"></div>
+    <div style="position:relative;flex:1;min-height:400px;display:flex;flex-direction:column; overflow:hidden;">
+      
+    <!-- Position Info Overlay -->
+    <div id="pos-panel" style="position:absolute; top:10px; left:10px; z-index:100; background:rgba(13, 17, 23, 0.9); border:1px solid var(--bd2); border-radius:6px; padding:10px 15px; display:none; box-shadow:0 4px 6px rgba(0,0,0,0.3); backdrop-filter:blur(4px);">
+      <div style="font-size:11px; font-weight:600; margin-bottom:5px; color:var(--t);" id="pos-title">POSITION</div>
+      <div style="display:flex; gap:15px; font-size:11px; font-family:monospace;">
+         <div><span style="color:var(--t3)">Entry:</span> <span id="pos-entry" style="color:var(--b); font-weight:bold;">-</span></div>
+         <div><span style="color:var(--t3)">SL:</span> <span id="pos-sl" style="color:var(--r); font-weight:bold;">-</span></div>
+         <div><span style="color:var(--t3)">TP:</span> <span id="pos-tp" style="color:var(--g); font-weight:bold;">-</span></div>
+         <div><span style="color:var(--t3)">PnL:</span> <span id="pos-pnl" style="font-weight:bold;">-</span></div>
+      </div>
+    </div>
+    <div id="tv-c" style="flex:1;height:100%;"></div>
+    </div>
     <div class="tstrip">
       <div class="shdr"><div class="st"><span class="dot"></span>Recent Trades</div><span class="cnt" id="tcnt">0</span></div>
       <div class="sbody">
@@ -193,7 +184,6 @@ tr:hover td{background:var(--bg4);}
       </div>
     </div>
   </div>
-  <!-- Scanner Tab -->
   <div class="tc" id="tc-scanner">
     <div class="scan-wrap">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -221,7 +211,6 @@ tr:hover td{background:var(--bg4);}
       </div>
     </div>
   </div>
-  <!-- Signals Tab -->
   <div class="tc" id="tc-signals">
     <div class="sig-wrap">
       <div class="sig-top">
@@ -238,10 +227,16 @@ tr:hover td{background:var(--bg4);}
       </div>
     </div>
   </div>
-  <!-- Journal Tab -->
   <div class="tc" id="tc-journal">
     <div class="jwrap">
-      <div class="jg">
+      
+<div class="jg" style="margin-bottom:20px; border-bottom:1px solid var(--bd); padding-bottom:20px;">
+  <div class="jc"><div class="jcl">Today Net PnL</div><div class="jcv" id="d-net">$0.00</div></div>
+  <div class="jc"><div class="jcl">Total Trades</div><div class="jcv b" id="d-total">0</div></div>
+  <div class="jc"><div class="jcl">Buys / Sells</div><div class="jcv"><span class="g" id="d-buy">0</span> / <span class="r" id="d-sell">0</span></div></div>
+  <div class="jc"><div class="jcl">Wins / Losses</div><div class="jcv"><span class="g" id="d-win">0</span> / <span class="r" id="d-loss">0</span></div></div>
+</div>
+<div class="jg">
         <div class="jc"><div class="jcl">Total PnL</div><div class="jcv" id="jpnl">$0.00</div><div style="font-size:10px;color:var(--t3)">All closed</div></div>
         <div class="jc"><div class="jcl">Trades</div><div class="jcv b" id="jtot">0</div><div style="font-size:10px;color:var(--t3)" id="jopen">0 open</div></div>
         <div class="jc"><div class="jcl">Best Trade</div><div class="jcv g" id="jbest">$0.00</div></div>
@@ -270,7 +265,26 @@ tr:hover td{background:var(--bg4);}
       </div>
     </div>
   </div>
-  <!-- Settings Tab -->
+  
+  <!-- Math Predict Tab -->
+  <div class="tc" id="tc-math">
+    <div class="jwrap">
+      <div class="jg">
+        <div class="jc"><div class="jcl">Total Scanned</div><div class="jcv b" id="m-total">0</div></div>
+        <div class="jc"><div class="jcl">Math Trend UP</div><div class="jcv g" id="m-up">0</div></div>
+        <div class="jc"><div class="jcl">Math Trend DOWN</div><div class="jcv r" id="m-down">0</div></div>
+        <div class="jc"><div class="jcl">Last Updated</div><div class="jcv" id="m-time" style="font-size:14px">--:--</div></div>
+      </div>
+      <div class="sc">
+        <div class="sch"><span class="dot"></span>Mathematical Prediction (Linear Regression - Past 20 Candles)</div>
+        <table>
+          <thead><tr><th>#</th><th>Symbol</th><th>Price</th><th>Math Trend</th><th>Predicted Change</th><th>Tech Signal</th><th>Status</th></tr></thead>
+          <tbody id="math-table"><tr><td class="emp" colspan="7">Click Scan Now in Scanner tab to get Math Predictions...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <div class="tc" id="tc-settings">
     <div class="swrap">
       <div style="margin-bottom:12px;">
@@ -298,8 +312,8 @@ tr:hover td{background:var(--bg4);}
     </div>
   </div>
 </div>
-<!-- Right Panel: Compact Table -->
-<div class="rp">
+<button id="toggle-rp" onclick="toggleSidebar()" style="position:absolute;right:240px;top:100px;z-index:99;background:var(--bg3);border:1px solid var(--bd2);color:var(--t);cursor:pointer;padding:5px;border-radius:4px;">▶</button>
+<div class="rp" id="right-panel">
   <div class="rph">📊 Markets<span onclick="fetchS()">↻</span></div>
   <div class="rtable-wrap">
     <table class="rt">
@@ -315,14 +329,12 @@ tr:hover td{background:var(--bg4);}
 <script>
 let cur='BTCUSDT',tab='chart';
 
-// Countdown timer
 function updateCountdown(){
   const now=new Date(),ms=now.getTime(),iv=15*60*1000;
   const nc=Math.ceil(ms/iv)*iv,rem=Math.floor((nc-ms)/1000);
   const m=Math.floor(rem/60),s=rem%60;
   const el=document.getElementById('countdown');
   if(el){
-    const pct=rem/(15*60);
     el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
     el.style.color=rem<60?'var(--r)':rem<180?'var(--y)':'var(--g)';
   }
@@ -337,6 +349,7 @@ function st(t,el){
   if(t==='journal')fetchJ();
   if(t==='scanner')fetchScan();
   if(t==='settings')fetchSettings();
+  if(t==='math')fetchMath();
 }
 
 function lc(sym){
@@ -344,10 +357,11 @@ function lc(sym){
   const c=document.getElementById('tv-c');c.innerHTML='';
   const el=document.createElement('div');el.id='tv';el.style.cssText='height:100%;width:100%;';
   c.appendChild(el);
-  new TradingView.widget({container_id:'tv',autosize:true,
+  fetchPosition(sym);
+  window.tvWidget = new TradingView.widget({container_id:'tv',autosize:true,
     symbol:'BYBIT:'+sym.replace('USDT','USDT.P'),
     interval:'15',timezone:'Asia/Dhaka',theme:'dark',style:'1',locale:'en',
-    backgroundColor:'#0d1117',enable_publishing:false,save_image:false,
+    backgroundColor:'#0d1117',enable_publishing:false,save_image:false,withdateranges:true,hide_side_toolbar:false,allow_symbol_change:true,
     studies:['RSI@tv-basicstudies','MACD@tv-basicstudies']});
 }
 
@@ -357,6 +371,78 @@ function mc(v){return v>0?'class="g"':v<0?'class="r"':'';}
 function fp(v){
   if(v===null||v===undefined)return'<span style="color:var(--t3)">—</span>';
   return'<span class="'+(v>=0?'g':'r')+'">'+(v>=0?'+':'')+'$'+Number(v).toFixed(2)+'</span>';
+}
+
+
+function toggleSidebar() {
+  const rp = document.getElementById('right-panel');
+  const btn = document.getElementById('toggle-rp');
+  if (rp.style.display === 'none') {
+    rp.style.display = 'flex';
+    btn.innerHTML = '▶';
+    btn.style.right = '240px';
+  } else {
+    rp.style.display = 'none';
+    btn.innerHTML = '◀';
+    btn.style.right = '0px';
+  }
+}
+
+function openChart(sym) {
+  if (tab !== 'chart') {
+    st('chart', document.getElementById('t-chart'));
+  }
+  lc(sym);
+}
+
+async function fetchRealBalance() {
+  try {
+    const d = await(await fetch('/api/real_balance')).json();
+    if (d.balance !== undefined) {
+      document.getElementById('hbal').textContent = '$' + Number(d.balance).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+  } catch(e) {}
+}
+
+async function fetchDailyStats() {
+  try {
+    const d = await(await fetch('/api/daily_stats')).json();
+    document.getElementById('d-net').textContent = (d.net_pnl >= 0 ? '+' : '') + '$' + Number(d.net_pnl).toFixed(2);
+    document.getElementById('d-net').className = 'jcv ' + (d.net_pnl >= 0 ? 'g' : 'r');
+    document.getElementById('d-total').textContent = d.total;
+    document.getElementById('d-buy').textContent = d.buys;
+    document.getElementById('d-sell').textContent = d.sells;
+    document.getElementById('d-win').textContent = d.wins;
+    document.getElementById('d-loss').textContent = d.losses;
+  } catch(e) {}
+}
+
+
+
+
+let currentPos = null;
+
+async function fetchPosition(sym) {
+  try {
+    const d = await(await fetch(`/api/position/${sym}`)).json();
+    const panel = document.getElementById('pos-panel');
+    
+    if (d.has_position) {
+      panel.style.display = 'block';
+      const sideColor = d.side === 'Buy' ? 'var(--g)' : 'var(--r)';
+      document.getElementById('pos-title').innerHTML = `<span style="color:${sideColor}">●</span> ${d.side.toUpperCase()} ${sym}`;
+      
+      document.getElementById('pos-entry').textContent = '$' + d.entry.toFixed(4);
+      document.getElementById('pos-sl').textContent = d.sl > 0 ? '$' + d.sl.toFixed(4) : 'None';
+      document.getElementById('pos-tp').textContent = d.tp > 0 ? '$' + d.tp.toFixed(4) : 'None';
+      
+      const pnlEl = document.getElementById('pos-pnl');
+      pnlEl.textContent = (d.pnl >= 0 ? '+' : '') + '$' + d.pnl.toFixed(2);
+      pnlEl.style.color = d.pnl >= 0 ? 'var(--g)' : 'var(--r)';
+    } else {
+      panel.style.display = 'none';
+    }
+  } catch(e) { console.error(e); }
 }
 
 async function fetchS(){
@@ -373,7 +459,6 @@ async function fetchS(){
     pe.textContent=(pnl>=0?'+':'')+'$'+pnl.toFixed(2);
     pe.style.color=pnl>=0?'var(--g)':'var(--r)';
     document.getElementById('tcnt').textContent=d.trade_log.length;
-    // Right panel table
     const rb=document.getElementById('rtbody');rb.innerHTML='';
     for(const[sym,s]of Object.entries(d.symbols)){
       const chgCls=s.price_change_pct>=0?'chgp':'chgn';
@@ -392,7 +477,6 @@ async function fetchS(){
       });
       rb.appendChild(tr);
     }
-    // Trade log
     const tb=document.getElementById('tlog');
     if(!d.trade_log||!d.trade_log.length){tb.innerHTML='<tr><td class="emp" colspan="7">No trades yet...</td></tr>';}
     else{tb.innerHTML=d.trade_log.map(t=>`<tr>
@@ -402,7 +486,6 @@ async function fetchS(){
       <td class="mn">${Number(t.qty).toFixed(4)}</td>
       <td class="mn r">$${Number(t.sl).toFixed(4)}</td>
       <td class="mn g">$${Number(t.tp).toFixed(4)}</td></tr>`).join('');}
-    // Signal history
     if(d.signal_history){
       const sigs=d.signal_history;
       document.getElementById('sg-tot').textContent=sigs.length;
@@ -437,7 +520,7 @@ async function fetchScan(){
     document.getElementById('sc-dur').textContent=d.duration_sec+'s';
     const tb=document.getElementById('scan-table');
     if(!d.results||!d.results.length){tb.innerHTML='<tr><td class="emp" colspan="10">No results</td></tr>';return;}
-    tb.innerHTML=d.results.map((r,i)=>`<tr>
+    tb.innerHTML=d.results.map((r,i)=>`<tr style='cursor:pointer' onclick="openChart('${r.symbol}')">
       <td class="mn t3">${i+1}</td>
       <td class="dsym">${r.symbol}</td>
       <td class="mn">$${Number(r.price).toFixed(4)}</td>
@@ -460,6 +543,29 @@ async function runScan(){
     await fetchScan();
   }catch(e){console.error(e);}
   btn.disabled=false;btn.textContent='🔍 Scan Now';
+}
+
+async function fetchMath() {
+  try {
+    const d = await(await fetch('/api/scan')).json();
+    if(!d.results) return;
+    document.getElementById('m-total').textContent = d.total_scanned;
+    document.getElementById('m-up').textContent = d.results.filter(r => r.math_signal === 'BUY').length;
+    document.getElementById('m-down').textContent = d.results.filter(r => r.math_signal === 'SELL').length;
+    document.getElementById('m-time').textContent = d.scanned_at.split(' ')[1] || '--:--';
+    const tb = document.getElementById('math-table');
+    tb.innerHTML = d.results.map((r, i) => `
+      <tr style='cursor:pointer' onclick="openChart('${r.symbol}')">
+        <td class="mn t3">${i+1}</td>
+        <td class="dsym">${r.symbol}</td>
+        <td class="mn">$${Number(r.price).toFixed(4)}</td>
+        <td><span class="sigb s${r.math_signal}">${r.math_signal}</span></td>
+        <td class="mn ${r.math_pct > 0 ? 'g' : r.math_pct < 0 ? 'r' : 't3'}">${r.math_pct > 0 ? '+' : ''}${r.math_pct}%</td>
+        <td><span class="sigb s${r.signal}">${r.signal}</span></td>
+        <td>${r.selected ? '<span class="scored-yes">✅ Trade Ready</span>' : '<span class="scored-no">Skipped</span>'}</td>
+      </tr>
+    `).join('');
+  } catch(e) { console.error(e); }
 }
 
 async function fetchJ(){
@@ -535,9 +641,13 @@ async function testConn(){
   }catch(e){console.error(e);}
 }
 
-lc('BTCUSDT');fetchS();
+lc('BTCUSDT');fetchS();fetchRealBalance();
 setInterval(fetchS,5000);
-setInterval(()=>{if(tab==='journal')fetchJ();if(tab==='scanner')fetchScan();},15000);
+setInterval(() => { if(cur) fetchPosition(cur); }, 3000);
+setInterval(fetchRealBalance, 60000);
+setInterval(fetchDailyStats, 15000);
+fetchDailyStats();
+setInterval(()=>{if(tab==='journal')fetchJ();if(tab==='scanner')fetchScan();if(tab==='math')fetchMath();},15000);
 </script>
 </body>
 </html>
