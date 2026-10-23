@@ -14,3 +14,5 @@ dashboard/static/style.css
 /change_port.py
 *.db
 *.sqlite
+# Local backup files
+*.bak

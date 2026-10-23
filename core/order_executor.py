@@ -75,22 +75,34 @@ class OrderExecutor:
     # Positions (real state from Bybit)
     # ------------------------------------------------------------------
     def get_open_position(self):
-        """Open position dict for this symbol, or None if flat."""
+        """Return position, None if flat; raise on API failure."""
         try:
             resp = cast(
                 dict[str, Any],
-                self.session.get_positions(category="linear", symbol=self.symbol),
+                self.session.get_positions(
+                    category="linear",
+                    symbol=self.symbol
+                ),
             )
-            if resp["retCode"] != 0:
-                logger.error(f"[{self.symbol}] get_positions error: {resp['retMsg']}")
-                return None
-            for pos in resp["result"]["list"]:
+
+            if resp.get("retCode") != 0:
+                raise RuntimeError(
+                    f"Bybit error: {resp.get('retMsg')}"
+                )
+
+            positions = resp.get("result", {}).get("list", [])
+
+            for pos in positions:
                 if float(pos.get("size", 0)) > 0:
                     return pos
+
             return None
+
         except Exception as e:
-            logger.error(f"[{self.symbol}] get_open_position exception: {e}")
-            return None
+            logger.error(
+                f"[{self.symbol}] Position API failed: {e}"
+            )
+            raise
 
     def has_open_position(self) -> bool:
         return self.get_open_position() is not None

@@ -1,4 +1,4 @@
-﻿import time, threading
+import time, threading, os
 from typing import Any, cast
 import uvicorn
 from config.settings import SYMBOLS, TIMEFRAME, MAX_OPEN_TRADES
@@ -57,7 +57,20 @@ def process_symbol(symbol, market, executor, strategy, risk, last_candle):
     rsi_v = float(curr["rsi"])
     macd_v = float(curr.get("macd", 0))
     if signal != "HOLD":
-        open_count = executor.count_open_positions() or 0
+        open_count = executor.count_open_positions()
+
+        if open_count is None:
+            logger.error(
+                f"[{symbol}] Position count unavailable. "
+                "Skipping trade for safety."
+            )
+            bot_state.add_signal(
+                symbol, signal, price, rsi_v, macd_v,
+                traded=False,
+                reason="Bybit position count unavailable"
+            )
+            return
+
         has_pos = pos is not None
         if has_pos:
             reason = "Already has open position"
@@ -156,4 +169,4 @@ def bot_loop():
 if __name__ == "__main__":
     t = threading.Thread(target=bot_loop, daemon=True)
     t.start()
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="warning")
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8001")), log_level="warning")
