@@ -154,3 +154,197 @@ def recover_recorded_intents(session=None):
         "recovered": recovered,
         "blocked": len(intents) - recovered,
     }
+
+
+def recover_missing_fills(session=None):
+    """Recover verified Filled orders lacking a Neon trade.
+
+    No Bybit place/close/cancel calls.
+    Unknown, partial, conflicting or rejected orders remain blocked.
+    """
+    from datetime import datetime, timezone
+
+    intents = load_pending()
+    if not intents:
+        return {"checked": 0, "recovered": 0}
+
+    if session is None:
+        session = HTTP(
+            testnet=TESTNET,
+            demo=DEMO_MODE,
+            api_key=API_KEY,
+            api_secret=API_SECRET,
+        )
+
+    recovered = 0
+
+    for intent in intents:
+        symbol = intent["symbol"]
+        link_id = intent["link_id"]
+
+        try:
+            response = session.get_order_history(
+                category="linear",
+                symbol=symbol,
+                orderLinkId=link_id,
+            )
+
+            if response.get("retCode") != 0:
+                raise RuntimeError("Bybit order history unavailable")
+
+            matches = [
+                order
+                for order in response.get(
+                    "result", {}
+                ).get("list", [])
+                if order.get("orderLinkId") == link_id
+                and order.get("symbol") == symbol
+                and order.get("side") == intent["side"]
+            ]
+
+            if len(matches) != 1:
+                continue
+
+            order = matches[0]
+
+            if order.get("orderStatus") != "Filled":
+                continue
+
+            order_id = order.get("orderId")
+            if not order_id:
+                continue
+
+            if (
+                intent.get("order_id")
+                and intent["order_id"] != order_id
+            ):
+                continue
+
+            qty = Decimal(str(order.get("cumExecQty", "0")))
+            price = Decimal(str(order.get("avgPrice") or "0"))
+
+            if not (
+                qty.is_finite() and qty > 0
+                and price.is_finite() and price > 0
+            ):
+                continue
+
+            opened_ms = int(order.get("createdTime") or 0)
+            if opened_ms <= 0:
+                continue
+
+            opened_at = datetime.fromtimestamp(
+                opened_ms / 1000, tz=timezone.utc
+            ).replace(tzinfo=None)
+
+            def optional_level(value):
+                try:
+                    result = Decimal(str(value or "0"))
+                    return result if result.is_finite() and result > 0 else None
+                except (TypeError, ValueError, ArithmeticError):
+                    return None
+
+            sl = optional_level(order.get("stopLoss"))
+            tp = optional_level(order.get("takeProfit"))
+
+            with get_conn() as conn:
+                with conn.cursor() as cur:
+                    # Serialize reconciliation against other DB writers.
+                    cur.execute(
+                        "LOCK TABLE trades IN SHARE ROW EXCLUSIVE MODE"
+                    )
+
+                    cur.execute(
+                        """
+                        SELECT id, symbol, side, qty
+                        FROM trades
+                        WHERE order_id = %s
+                        """,
+                        (order_id,),
+                    )
+                    saved = cur.fetchall()
+
+                    if len(saved) > 1:
+                        raise RuntimeError(
+                            "Duplicate saved order IDs"
+                        )
+
+                    if saved:
+                        row = saved[0]
+                        if (
+                            row["symbol"] != symbol
+                            or row["side"] != intent["side"]
+                            or Decimal(str(row["qty"])) != qty
+                        ):
+                            raise RuntimeError(
+                                "Existing trade does not match Bybit fill"
+                            )
+                    else:
+                        cur.execute(
+                            """
+                            SELECT id FROM trades
+                            WHERE symbol = %s AND status = 'OPEN'
+                            LIMIT 1
+                            """,
+                            (symbol,),
+                        )
+                        if cur.fetchone():
+                            raise RuntimeError(
+                                "Other OPEN trade exists for symbol"
+                            )
+
+                        cur.execute(
+                            """
+                            INSERT INTO trades
+                                (time, symbol, side, entry_price, qty,
+                                 stop_loss, take_profit, status, order_id)
+                            VALUES
+                                (%s, %s, %s, %s, %s, %s, %s,
+                                 'OPEN', %s)
+                            RETURNING id
+                            """,
+                            (
+                                opened_at, symbol, intent["side"],
+                                price, qty, sl, tp, order_id,
+                            ),
+                        )
+
+                        if not cur.fetchone():
+                            raise RuntimeError(
+                                "Recovery insert failed"
+                            )
+
+                    # Intent and trade are committed atomically.
+                    cur.execute(
+                        """
+                        UPDATE trade_order_intents
+                        SET status = 'RECORDED',
+                            order_id = %s,
+                            updated_at = NOW()
+                        WHERE link_id = %s
+                          AND status IN (
+                              'PENDING', 'ACKNOWLEDGED',
+                              'UNCERTAIN', 'FILLED_UNSAVED'
+                          )
+                        RETURNING link_id
+                        """,
+                        (order_id, link_id),
+                    )
+                    if not cur.fetchone():
+                        raise RuntimeError(
+                            "Recovery intent changed concurrently"
+                        )
+
+                conn.commit()
+
+            recovered += 1
+            logger.info(
+                f"[{symbol}] Verified order recovered: {order_id}"
+            )
+
+        except Exception as exc:
+            logger.error(
+                f"[{symbol}] Missing fill recovery blocked: {exc}"
+            )
+
+    return {"checked": len(intents), "recovered": recovered}

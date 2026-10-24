@@ -1,4 +1,5 @@
 import time, threading, os
+import pandas as pd
 from typing import Any, cast
 from decimal import Decimal
 import uvicorn
@@ -290,7 +291,28 @@ def process_symbol(symbol, market, executor, strategy, risk, last_candle):
     pos = executor.get_open_position()
     check_closed(symbol, executor, pos)
     df = market.get_candles()
-    if df is None or df.empty: return
+    if df is None or df.empty:
+        return
+
+    # Use completed candles only, including in live trading.
+    timestamps = pd.to_datetime(
+        df["timestamp"], utc=True, errors="coerce"
+    )
+    if timestamps.isna().any():
+        logger.warning(f"[{symbol}] Invalid candle timestamps")
+        return
+
+    interval = pd.Timedelta(minutes=int(TIMEFRAME))
+    now = pd.Timestamp.now(tz="UTC")
+    mask = (timestamps + interval) <= (now - pd.Timedelta(seconds=2))
+
+    df = df.loc[mask].copy()
+    if len(df) < 40:
+        return
+
+    df = df.sort_values("timestamp").drop_duplicates(
+        subset=["timestamp"], keep="last"
+    )
     closed_time = df.iloc[-1]["timestamp"]
     same = closed_time == last_candle.get(symbol)
     df_ind = strategy.calculate_indicators(df).dropna()
@@ -491,7 +513,11 @@ def bot_loop():
             return
 
         initialize_intents()
-        from core.pending_order_recovery import recover_recorded_intents
+        from core.pending_order_recovery import (
+            recover_recorded_intents,
+            recover_missing_fills,
+        )
+        recover_missing_fills()
         recover_recorded_intents()
         blocked_symbols.update(pending_symbols())
 

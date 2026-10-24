@@ -5,6 +5,12 @@ import os,time
 from dashboard.state import bot_state
 from database import get_all_trades,get_journal_stats,get_symbol_stats
 app=FastAPI(title="Bybit Demo Bot")
+from dashboard.security import require_dashboard_auth
+app.middleware("http")(require_dashboard_auth)
+
+@app.get("/healthz")
+def healthz():
+    return {"web": "ok"}
 from dashboard.legacy_metrics import router as metrics_router
 app.include_router(metrics_router)
 from dashboard.live import router as live_router

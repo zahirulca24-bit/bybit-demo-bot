@@ -1,4 +1,4 @@
-﻿"""Neon-backed trading lock and persistent order intents."""
+"""Neon-backed trading lock and persistent order intents."""
 
 import uuid
 
@@ -39,7 +39,23 @@ def assert_bot_lock(conn):
         raise RuntimeError("Trading lock connection lost")
 
     with conn.cursor() as cur:
-        cur.execute("SELECT 1")
+        cur.execute(
+            '''
+            SELECT EXISTS (
+                SELECT 1 FROM pg_locks
+                WHERE locktype = 'advisory'
+                  AND pid = pg_backend_pid()
+                  AND granted
+                  AND classid = 0
+                  AND objid = %s::oid
+            ) AS held
+            ''',
+            (LOCK_KEY,),
+        )
+        row = cur.fetchone()
+
+    if not row or row["held"] is not True:
+        raise RuntimeError("Trading advisory lock no longer held")
 
 
 def initialize_intents():
