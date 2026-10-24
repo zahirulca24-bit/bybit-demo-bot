@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 from ta.momentum import RSIIndicator
 from ta.trend import MACD, ema_indicator
 from config.settings import (
@@ -35,6 +35,19 @@ class Strategy:
         return df
 
     def get_signal(self, df: pd.DataFrame, symbol: str = "") -> str:
+        # Reject malformed prices before technical indicators run.
+        if df is None or len(df) < 40 or "close" not in df:
+            return "HOLD"
+
+        prices = pd.to_numeric(df["close"], errors="coerce")
+        if prices.isna().any() or (prices <= 0).any():
+            return "HOLD"
+
+        if "timestamp" in df.columns:
+            times = pd.to_datetime(df["timestamp"], errors="coerce")
+            if times.isna().any() or not times.is_monotonic_increasing:
+                return "HOLD"
+
         df = self.calculate_indicators(df)
         df = df.dropna().reset_index(drop=True)
 

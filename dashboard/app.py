@@ -5,6 +5,10 @@ import os,time
 from dashboard.state import bot_state
 from database import get_all_trades,get_journal_stats,get_symbol_stats
 app=FastAPI(title="Bybit Demo Bot")
+from dashboard.legacy_metrics import router as metrics_router
+app.include_router(metrics_router)
+from dashboard.live import router as live_router
+app.include_router(live_router)
 static_dir=os.path.join(os.path.dirname(__file__),"static")
 app.mount("/static",StaticFiles(directory=static_dir),name="static")
 @app.get("/")
@@ -18,11 +22,54 @@ def status():
             "signal":s.signal,"has_position":s.has_position,"position_side":s.position_side,
             "position_size":s.position_size,"unrealized_pnl":s.unrealized_pnl,
             "macd":round(s.macd,4),"macd_signal":round(s.macd_signal,4),"macd_hist":round(s.macd_hist,4)}
-    return{"running":bot_state.running,
-           "uptime":int(time.time()-bot_state.started_at) if bot_state.running else 0,
-           "balance_usdt":round(bot_state.balance_usdt,2),
-           "symbols":syms,"trade_log":bot_state.trade_log[:20],
-           "signal_history":bot_state.signal_history[:50]}
+    balance = round(bot_state.balance_usdt, 2)
+    trades = bot_state.trade_log[:20]
+    data_errors = {}
+
+    if not bot_state.running:
+        # Dashboard-only mode: fetch the balance from Bybit.
+        # Never mistake an API failure for a zero balance.
+        try:
+            from dashboard.legacy_metrics import real_balance
+            balance = real_balance()["balance"]
+        except Exception as exc:
+            balance = None
+            data_errors["balance"] = str(exc)
+
+        # Restore recent trade rows from Neon after restart.
+        try:
+            rows = get_all_trades(limit=20)
+            trades = [
+                {
+                    "time": str(t["time"])[:19],
+                    "symbol": t["symbol"],
+                    "side": t["side"],
+                    "price": float(t["entry_price"]),
+                    "qty": float(t["qty"]),
+                    "sl": float(t["stop_loss"] or 0),
+                    "tp": float(t["take_profit"] or 0),
+                    "status": t["status"],
+                }
+                for t in rows
+            ]
+        except Exception as exc:
+            data_errors["trades"] = str(exc)
+
+    from dashboard.account_snapshot import get_account_snapshot
+    live_account_data, live_account_error = get_account_snapshot()
+
+    return {
+        "live_account": live_account_data,
+        "live_account_error": live_account_error,
+        "running": bot_state.running,
+        "uptime": int(time.time() - bot_state.started_at)
+                  if bot_state.running else 0,
+        "balance_usdt": balance,
+        "symbols": syms,
+        "trade_log": trades,
+        "signal_history": bot_state.signal_history[:50],
+        "data_errors": data_errors,
+    }
 @app.get("/api/scan")
 def get_scan():return bot_state.last_scan or{"scanned_at":"","total_scanned":0,"selected":0,"results":[]}
 @app.post("/api/scan/run")
@@ -88,6 +135,8 @@ def get_position(symbol: str):
     try:
         s = HTTP(testnet=TESTNET, demo=DEMO_MODE, api_key=API_KEY, api_secret=API_SECRET)
         r = s.get_positions(category="linear", symbol=symbol)
+        if r.get("retCode") != 0:
+            raise RuntimeError("Bybit position request failed")
         pos_list = r.get("result", {}).get("list", [])
         
         if pos_list and float(pos_list[0].get("size", 0)) > 0:
@@ -101,7 +150,11 @@ def get_position(symbol: str):
                 "pnl": float(p.get("unrealisedPnl", 0))
             }
         return {"has_position": False}
-    except Exception as e:
-        return {"has_position": False, "error": str(e)}
+    except Exception:
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=503,
+            detail="Bybit position data unavailable"
+        )
 
 
