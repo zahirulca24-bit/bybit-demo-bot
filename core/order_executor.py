@@ -148,7 +148,7 @@ class OrderExecutor:
     # ------------------------------------------------------------------
     # Orders
     # ------------------------------------------------------------------
-    def place_market_order(self, levels: dict):
+    def place_market_order(self, levels: dict, order_link_id=None):
         """levels from RiskManager.calculate_levels(). side = "Buy" or "Sell"."""
         if not self.ready:
             logger.error(f"[{self.symbol}] Executor not ready (instrument info missing)")
@@ -175,7 +175,7 @@ class OrderExecutor:
                     tpTriggerBy="LastPrice",
                     tpslMode="Full",
                     positionIdx=0,  # one-way mode
-                    orderLinkId=f"bot-{uuid.uuid4().hex[:16]}",
+                    orderLinkId=order_link_id or f"bot-{uuid.uuid4().hex[:16]}",
                 ),
             )
             if resp["retCode"] != 0:

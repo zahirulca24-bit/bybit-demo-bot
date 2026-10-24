@@ -395,29 +395,56 @@ function openChart(sym) {
   lc(sym);
 }
 
+
 async function fetchRealBalance() {
+  const el = document.getElementById('hbal');
   try {
-    const d = await(await fetch('/api/real_balance')).json();
-    if (d.balance !== undefined) {
-      document.getElementById('hbal').textContent = '$' + Number(d.balance).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const response = await fetch('/api/real_balance', {
+      cache: 'no-store'
+    });
+    if (!response.ok) throw new Error('Balance API unavailable');
+    const d = await response.json();
+    if (!Number.isFinite(Number(d.balance))) {
+      throw new Error('Invalid balance');
     }
-  } catch(e) {}
+    el.textContent = '$' + Number(d.balance).toLocaleString(
+      'en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}
+    );
+    el.title = 'Bybit Demo account equity (USD)';
+  } catch (e) {
+    el.textContent = 'Unavailable';
+    el.title = String(e);
+  }
 }
 
 async function fetchDailyStats() {
+  const ids = ['d-net', 'd-total', 'd-buy',
+               'd-sell', 'd-win', 'd-loss'];
   try {
-    const d = await(await fetch('/api/daily_stats')).json();
-    document.getElementById('d-net').textContent = (d.net_pnl >= 0 ? '+' : '') + '$' + Number(d.net_pnl).toFixed(2);
-    document.getElementById('d-net').className = 'jcv ' + (d.net_pnl >= 0 ? 'g' : 'r');
+    const response = await fetch('/api/daily_stats', {
+      cache: 'no-store'
+    });
+    if (!response.ok) throw new Error('Daily stats unavailable');
+    const d = await response.json();
+    const net = Number(d.net_pnl);
+    if (!Number.isFinite(net)) throw new Error('Invalid PnL');
+
+    document.getElementById('d-net').textContent =
+      (net >= 0 ? '+' : '') + '$' + net.toFixed(2);
+    document.getElementById('d-net').className =
+      'jcv ' + (net >= 0 ? 'g' : 'r');
     document.getElementById('d-total').textContent = d.total;
     document.getElementById('d-buy').textContent = d.buys;
     document.getElementById('d-sell').textContent = d.sells;
     document.getElementById('d-win').textContent = d.wins;
     document.getElementById('d-loss').textContent = d.losses;
-  } catch(e) {}
+  } catch (e) {
+    ids.forEach(id => {
+      document.getElementById(id).textContent = '—';
+    });
+    console.error('Daily stats:', e);
+  }
 }
-
-
 
 
 let currentPos = null;
@@ -449,15 +476,36 @@ async function fetchS(){
   try{
     const d=await(await fetch('/api/status')).json();
     document.getElementById('hup').textContent=fu(d.uptime);
-    document.getElementById('hbal').textContent='$'+Number(d.balance_usdt||0).toLocaleString('en-US',{maximumFractionDigits:0});
-    document.getElementById('hupd').textContent=new Date().toLocaleTimeString('en-US',{hour12:false});
-    const b=document.getElementById('sbadge');b.className='badge blive';b.innerHTML='<span class="pulse"></span>Live';
-    let pos=0,pnl=0;
-    for(const s of Object.values(d.symbols)){if(s.has_position){pos++;pnl+=s.unrealized_pnl;}}
-    document.getElementById('hpos').textContent=pos;
+    const account=d.live_account;
+    const bal=document.getElementById('hbal');
+    const balance=account?.equity_usd;
+    bal.textContent=balance == null ? '?' :
+      '$'+Number(balance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    bal.title=d.live_account_error || 'Bybit Demo Account Equity';
+
+    document.getElementById('hupd').textContent=
+      new Date().toLocaleTimeString('en-US',{hour12:false});
+
+    const b=document.getElementById('sbadge');
+    b.className=d.running?'badge blive':'badge boff';
+    b.textContent=d.running?'? LIVE':'MONITOR ONLY';
+
     const pe=document.getElementById('hpnl');
-    pe.textContent=(pnl>=0?'+':'')+'$'+pnl.toFixed(2);
-    pe.style.color=pnl>=0?'var(--g)':'var(--r)';
+    const pc=document.getElementById('hpos');
+
+    if(account){
+      pc.textContent=account.more_positions_possible ?
+        String(account.open_count)+'+' : account.open_count;
+      const pnl=Number(account.unrealized_pnl);
+      pe.textContent=(pnl>=0?'+':'')+'$'+pnl.toFixed(2);
+      pe.style.color=pnl>=0?'var(--g)':'var(--r)';
+      pe.title='Actual Bybit Demo Positions';
+    }else{
+      pc.textContent='?';
+      pe.textContent='Unavailable';
+      pe.style.color='var(--y)';
+      pe.title=d.live_account_error || 'Bybit connection unavailable';
+    }
     document.getElementById('tcnt').textContent=d.trade_log.length;
     const rb=document.getElementById('rtbody');rb.innerHTML='';
     for(const[sym,s]of Object.entries(d.symbols)){
